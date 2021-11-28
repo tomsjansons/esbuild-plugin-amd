@@ -1,18 +1,19 @@
 {
-	"name": "esbuild-amd-plugin",
-	"version": "1.0.0",
-	"main": "lib/index.ts",
-	"module": "lib/index.ts",
-	"license": "MIT",
-	"scripts": {
-		"build": "tsc"
-	},
-	"dependencies": {
-		"@buxlabs/amd-to-es6": "^0.16.1",
-		"esbuild": "^0.14.0"
-	},
-	"devDependencies": {
-		"@types/node": "^16.11.10",
-		"typescript": "^4.5.2"
-	}
+  "name": "esbuild-amd-plugin",
+  "version": "1.0.0",
+  "main": "lib/index.ts",
+  "module": "lib/index.ts",
+  "types": "./lib/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@buxlabs/amd-to-es6": "^0.16.1",
+    "esbuild": "^0.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.10",
+    "typescript": "^4.5.2"
+  }
 }
