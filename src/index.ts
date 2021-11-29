@@ -3,18 +3,11 @@ import convert from "@buxlabs/amd-to-es6";
 import fs from "fs";
 
 type PluginOptions = {
-  filter?: RegExp;
   debug?: boolean;
 };
 
 export function amd(options?: PluginOptions): Plugin {
-  const { filter, debug } = options || {};
-  if (!filter) {
-    console.warn(
-      "No filter specified - execution will be very slow as every file will need to be checked"
-    );
-  }
-
+  const { debug } = options || {};
   return {
     name: "amd",
     setup(build) {
