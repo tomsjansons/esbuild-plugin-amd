@@ -9,7 +9,6 @@ type PluginOptions = {
 };
 
 export function amd(options?: PluginOptions): Plugin {
-  console.log("amd plugin initialised", options);
   const { filter, debug } = options || {};
   if (!filter) {
     console.warn(
@@ -29,13 +28,16 @@ export function amd(options?: PluginOptions): Plugin {
       build.onLoad({ filter: /.*/, namespace: "amd" }, (args) => {
         const fileContents = fs.readFileSync(args.path, "utf-8");
         const transformedContents = convert(fileContents);
-        if (debug && transformedContents !== fileContents) {
-          console.info("AMD: Transformed file", args.path);
+        if (transformedContents !== fileContents) {
+          if (debug) {
+            console.info("AMD: Transformed file", args.path);
+          }
+          return {
+            contents: transformedContents,
+            loader: "js",
+          };
         }
-        return {
-          contents: transformedContents,
-          loader: "js",
-        };
+        return undefined;
       });
     },
   };
