@@ -9,6 +9,7 @@ type PluginOptions = {
 };
 
 export function amd(options?: PluginOptions): Plugin {
+  console.log("amd plugin initialised", options);
   const { filter, debug } = options || {};
   if (!filter) {
     console.warn(
