@@ -1,6 +1,7 @@
 import { Plugin } from "esbuild";
 declare type PluginOptions = {
-    filter: RegExp;
+    filter?: RegExp;
+    debug?: boolean;
 };
-export declare function amd({ filter }: PluginOptions): Plugin;
+export declare function amd(options?: PluginOptions): Plugin;
 export {};

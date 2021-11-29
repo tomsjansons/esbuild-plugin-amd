@@ -4,24 +4,35 @@ import path from "path";
 import fs from "fs";
 
 type PluginOptions = {
-  filter: RegExp;
+  filter?: RegExp;
+  debug?: boolean;
 };
 
-export function amd({ filter }: PluginOptions): Plugin {
+export function amd(options?: PluginOptions): Plugin {
+  const { filter, debug } = options || {};
+  if (!filter) {
+    console.warn(
+      "No filter specified - execution will be very slow as every file will need to be checked"
+    );
+  }
+
   return {
     name: "amd",
     setup(build) {
-      build.onResolve({ filter }, (args) => {
+      build.onResolve({ filter: filter || /.*/ }, (args) => {
         return {
           path: path.resolve(args.resolveDir, args.path),
           namespace: "amd",
         };
       });
       build.onLoad({ filter: /.*/, namespace: "amd" }, (args) => {
-        const result = fs.readFileSync(args.path, "utf-8");
-        const transformed = convert(result);
+        const fileContents = fs.readFileSync(args.path, "utf-8");
+        const transformedContents = convert(fileContents);
+        if (debug && transformedContents !== fileContents) {
+          console.info("AMD: Transformed file", args.path);
+        }
         return {
-          contents: transformed,
+          contents: transformedContents,
           loader: "js",
         };
       });
