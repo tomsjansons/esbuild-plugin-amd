@@ -3,9 +3,11 @@ import convert from "@buxlabs/amd-to-es6";
 import path from "path";
 import fs from "fs";
 
-const filter = /\b(?:define)\b/;
+type PluginOptions = {
+  filter: RegExp;
+};
 
-export function amd(): Plugin {
+export function amd({ filter }: PluginOptions): Plugin {
   return {
     name: "amd",
     setup(build) {
