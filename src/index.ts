@@ -1,6 +1,5 @@
 import { Plugin } from "esbuild";
 import convert from "@buxlabs/amd-to-es6";
-import path from "path";
 import fs from "fs";
 
 type PluginOptions = {
@@ -19,25 +18,25 @@ export function amd(options?: PluginOptions): Plugin {
   return {
     name: "amd",
     setup(build) {
-      build.onResolve({ filter: filter || /.*/ }, (args) => {
-        return {
-          path: path.resolve(args.resolveDir, args.path),
-          namespace: "amd",
-        };
-      });
-      build.onLoad({ filter: /.*/, namespace: "amd" }, (args) => {
-        const fileContents = fs.readFileSync(args.path, "utf-8");
-        const transformedContents = convert(fileContents);
-        if (transformedContents !== fileContents) {
-          if (debug) {
-            console.info("AMD: Transformed file", args.path);
-          }
-          return {
-            contents: transformedContents,
-            loader: "js",
-          };
+      build.onLoad({ filter: /$^/ }, async (args) => {
+        const fileContents = await fs.promises.readFile(args.path, "utf-8");
+
+        if (fileContents.indexOf("define") === -1) {
+          return null;
         }
-        return undefined;
+
+        const transformedContents = convert(fileContents);
+        if (transformedContents === fileContents) {
+          return null;
+        }
+
+        if (debug) {
+          console.info("AMD: Transformed file", args.path);
+        }
+        return {
+          contents: transformedContents,
+          loader: "js",
+        };
       });
     },
   };
